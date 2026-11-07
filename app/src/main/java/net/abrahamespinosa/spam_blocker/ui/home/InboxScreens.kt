@@ -234,10 +234,10 @@ fun ThreadScreen(
                             ).delete(message)
                         }.onSuccess { result ->
                             if (!result.providerConfirmed) {
-                                deleteWarning = "Se quitó de Spam-blocker, pero el proveedor del sistema no confirmó el borrado."
+                                deleteWarning = "Se quitó de Spam Blocker, pero el proveedor del sistema no confirmó el borrado."
                             }
                         }.onFailure {
-                            deleteWarning = "Se quitó de Spam-blocker, pero no se pudo comprobar el provider."
+                            deleteWarning = "Se quitó de Spam Blocker, pero no se pudo comprobar el provider."
                         }
                     }
                 }) { Text("Borrar") }

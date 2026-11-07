@@ -153,7 +153,7 @@ private fun SetupScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Configura Spam-blocker", style = MaterialTheme.typography.headlineMedium)
+        Text("Configura Spam Blocker", style = MaterialTheme.typography.headlineMedium)
             Text("Completa estos permisos para activar el filtrado.")
         SetupButton(
             label = "App de SMS predeterminada",
