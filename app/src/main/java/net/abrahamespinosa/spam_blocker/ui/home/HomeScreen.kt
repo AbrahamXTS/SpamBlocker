@@ -11,8 +11,11 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +57,8 @@ fun HomeScreen(
     stateReader: SetupStateReader,
     onRequestRole: (String) -> Unit,
     onRequestContacts: () -> Unit,
+    openThreadAddress: String?,
+    openThreadRequestId: Long,
 ) {
     val context = LocalContext.current
     val application = context.applicationContext as SpamBlockerApplication
@@ -63,6 +68,22 @@ fun HomeScreen(
     var selectedAddress by remember { mutableStateOf<String?>(null) }
     var selectedQuarantineAddress by remember { mutableStateOf<String?>(null) }
     var selectedQuarantineFilter by remember { mutableStateOf(QuarantineFilter.CALLS) }
+    var unavailableThreadNotice by remember { mutableStateOf(false) }
+
+    LaunchedEffect(openThreadAddress, openThreadRequestId) {
+        val address = openThreadAddress ?: return@LaunchedEffect
+        
+        if (database.inboxMessageDao().findByAddress(address).isNotEmpty()) {
+            selectedTab = HomeTab.INBOX
+            selectedAddress = address
+            selectedQuarantineAddress = null
+        } else {
+            selectedTab = HomeTab.INBOX
+            selectedAddress = null
+            selectedQuarantineAddress = null
+            unavailableThreadNotice = true
+        }
+    }
 
     BackHandler(enabled = selectedAddress != null || selectedQuarantineAddress != null) {
         selectedAddress = null
@@ -166,5 +187,18 @@ fun HomeScreen(
                 HomeTab.STATUS -> StatusScreen(stateReader, onRequestRole, onRequestContacts)
             }
         }
+    }
+
+    if (unavailableThreadNotice) {
+        AlertDialog(
+            onDismissRequest = { unavailableThreadNotice = false },
+            title = { Text("Conversación no disponible") },
+            text = { Text("El mensaje ya no está disponible en Spam Blocker.") },
+            confirmButton = {
+                Button(onClick = { unavailableThreadNotice = false }) {
+                    Text("Cerrar")
+                }
+            },
+        )
     }
 }

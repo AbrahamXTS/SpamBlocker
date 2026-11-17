@@ -37,6 +37,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import net.abrahamespinosa.spam_blocker.setup.SetupRequirement
 import net.abrahamespinosa.spam_blocker.setup.SetupStateReader
+import net.abrahamespinosa.spam_blocker.notifications.InboxNotification
 import net.abrahamespinosa.spam_blocker.sms.SmsImportRepository
 import net.abrahamespinosa.spam_blocker.ui.theme.SpamBlockerTheme
 
@@ -48,14 +49,43 @@ private enum class ImportState {
 }
 
 class MainActivity : ComponentActivity() {
+    private var notificationThreadAddress by mutableStateOf<String?>(null)
+    private var notificationRequestId by mutableStateOf(0L)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { SpamBlockerApp() }
+        updateNotificationRequest(intent)
+        setContent {
+            SpamBlockerApp(
+                openThreadAddress = notificationThreadAddress,
+                openThreadRequestId = notificationRequestId,
+            )
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        updateNotificationRequest(intent)
+    }
+
+    private fun updateNotificationRequest(intent: Intent?) {
+        val address = intent?.getStringExtra(InboxNotification.extraThreadAddress)
+        if (!address.isNullOrBlank()) {
+            notificationThreadAddress = address
+            notificationRequestId = intent.getLongExtra(
+                InboxNotification.extraRequestId,
+                System.nanoTime(),
+            )
+        }
     }
 }
 
 @Composable
-private fun SpamBlockerApp() {
+private fun SpamBlockerApp(
+    openThreadAddress: String?,
+    openThreadRequestId: Long,
+) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var refreshKey by remember { mutableStateOf(0) }
@@ -113,6 +143,8 @@ private fun SpamBlockerApp() {
                 onRequestContacts = {
                     contactsLauncher.launch(Manifest.permission.READ_CONTACTS)
                 },
+                openThreadAddress = openThreadAddress,
+                openThreadRequestId = openThreadRequestId,
                 )
             } else if (!stateReader.allGranted()) {
                 SetupScreen(

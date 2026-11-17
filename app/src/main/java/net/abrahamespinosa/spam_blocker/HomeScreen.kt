@@ -9,10 +9,14 @@ fun HomeScreen(
     stateReader: SetupStateReader,
     onRequestRole: (String) -> Unit,
     onRequestContacts: () -> Unit,
+    openThreadAddress: String?,
+    openThreadRequestId: Long,
 ) {
     HomeContent(
         stateReader = stateReader,
         onRequestRole = onRequestRole,
         onRequestContacts = onRequestContacts,
+        openThreadAddress = openThreadAddress,
+        openThreadRequestId = openThreadRequestId,
     )
 }
