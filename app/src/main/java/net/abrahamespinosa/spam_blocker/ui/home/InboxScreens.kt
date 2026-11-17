@@ -65,7 +65,7 @@ fun InboxScreen(
     MessageList(
         title = "Bandeja",
         description = "Tus conversaciones normales. Los SMS de Cuarentena no aparecen aquí.",
-        emptyLabel = "No hay SMS",
+        emptyLabel = "Bandeja vacía",
         rows = conversations.map { it.address to it.body },
         onClick = onOpenThread,
         onLongClick = { pendingConversation = it },

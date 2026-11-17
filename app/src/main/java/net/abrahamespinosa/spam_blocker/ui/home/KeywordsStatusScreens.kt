@@ -75,6 +75,14 @@ fun KeywordsScreen(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            if (values.isEmpty()) {
+                item {
+                    EmptyState(
+                        title = "No hay palabras",
+                        description = "Añade una palabra para empezar a filtrar SMS.",
+                    )
+                }
+            }
             items(values, key = { it.id }) { keyword ->
                 var menuExpanded by remember { mutableStateOf(false) }
                 Card(Modifier.fillMaxWidth()) {

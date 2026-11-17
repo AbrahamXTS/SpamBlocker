@@ -50,7 +50,10 @@ fun MessageList(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             ScreenIntro(title, description)
-            Text(emptyLabel)
+            EmptyState(
+                title = emptyLabel,
+                description = "Los mensajes normales aparecerán aquí.",
+            )
         }
         return
     }

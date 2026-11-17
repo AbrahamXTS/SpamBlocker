@@ -2,7 +2,7 @@
 
 ## Configuración inicial
 
-La aplicación comprueba que tenga el rol de SMS predeterminado, el rol de filtrado de llamadas y el permiso de contactos. Desde `Estado`, la persona puede solicitar cada requisito y volver a la aplicación para actualizar su estado.
+La aplicación comprueba que tenga el rol de SMS predeterminado, el rol de filtrado de llamadas y el permiso de contactos.
 
 ## Bandeja de entrada
 
