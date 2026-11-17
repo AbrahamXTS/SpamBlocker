@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import net.abrahamespinosa.spam_blocker.SpamBlockerApplication
 import net.abrahamespinosa.spam_blocker.data.InboxMessageEntity
@@ -72,8 +73,8 @@ fun HomeScreen(
 
     LaunchedEffect(openThreadAddress, openThreadRequestId) {
         val address = openThreadAddress ?: return@LaunchedEffect
-        
-        if (database.inboxMessageDao().findByAddress(address).isNotEmpty()) {
+        val messages = database.inboxMessageDao().observeAll().first()
+        if (messages.any { conversationKey(it.address) == conversationKey(address) }) {
             selectedTab = HomeTab.INBOX
             selectedAddress = address
             selectedQuarantineAddress = null

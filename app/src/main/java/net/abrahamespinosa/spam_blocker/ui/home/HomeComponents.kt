@@ -179,7 +179,7 @@ fun SenderAvatar(address: String, size: Dp = 48.dp) {
 }
 
 fun conversationKey(address: String): String {
-    val normalized = PhoneNumberUtils.normalizeNumber(address)
+    val normalized = PhoneNumberUtils.normalizeNumber(address).removePrefix("+")
     return normalized.ifBlank { address.trim().lowercase(Locale.ROOT) }
 }
 
